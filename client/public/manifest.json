@@ -1,0 +1,22 @@
+{
+  "name": "LiveTrack - Location Tracker",
+  "short_name": "LiveTrack",
+  "description": "Real-time GPS location tracking application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/location-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/location-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

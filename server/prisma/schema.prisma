@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  AWAY
+}
+
+enum GeofenceType {
+  CIRCULAR
+  POLYGON
+}
+
+enum NotificationType {
+  USER_ONLINE
+  USER_OFFLINE
+  GPS_DISABLED
+  LOW_ACCURACY
+  GEOFENCE_ENTRY
+  GEOFENCE_EXIT
+  SOS_ALERT
+}
+
+model User {
+  id                String              @id @default(uuid())
+  email             String              @unique
+  password          String
+  name              String
+  phone             String?
+  avatar            String?
+  role              UserRole            @default(USER)
+  status            UserStatus          @default(OFFLINE)
+  isBlocked         Boolean             @default(false)
+  lastSeen          DateTime?
+  emergencyContact  String?
+  preferences       Json?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  locations         Location[]
+  sessions          Session[]
+  geofences         Geofence[]
+  notifications     Notification[]
+  activityLogs      ActivityLog[]
+  sentMessages      ChatMessage[]       @relation("SentMessages")
+  receivedMessages  ChatMessage[]       @relation("ReceivedMessages")
+
+  @@index([email])
+  @@index([status])
+  @@map("users")
+}
+
+model Location {
+  id                String    @id @default(uuid())
+  userId            String
+  latitude          Float
+  longitude         Float
+  accuracy          Float?
+  altitude          Float?
+  altitudeAccuracy  Float?
+  heading           Float?
+  speed             Float?
+  address           String?
+  batteryLevel      Float?
+  networkStatus     String?
+  deviceInfo        Json?
+  timestamp         DateTime  @default(now())
+  createdAt         DateTime  @default(now())
+  
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, timestamp(sort: Desc)])
+  @@index([timestamp])
+  @@map("locations")
+}
+
+model Session {
+  id            String    @id @default(uuid())
+  userId        String
+  token         String    @unique
+  deviceInfo    Json?
+  ipAddress     String?
+  lastActivity  DateTime  @default(now())
+  expiresAt     DateTime
+  createdAt     DateTime  @default(now())
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("sessions")
+}
+
+model Geofence {
+  id            String        @id @default(uuid())
+  userId        String
+  name          String
+  description   String?
+  type          GeofenceType  @default(CIRCULAR)
+  centerLat     Float?
+  centerLng     Float?
+  radius        Float?
+  coordinates   Json?
+  isActive      Boolean       @default(true)
+  notifyEntry   Boolean       @default(true)
+  notifyExit    Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("geofences")
+}
+
+model Notification {
+  id            String             @id @default(uuid())
+  userId        String
+  type          NotificationType
+  title         String
+  message       String
+  data          Json?
+  isRead        Boolean            @default(false)
+  createdAt     DateTime           @default(now())
+  
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([createdAt(sort: Desc)])
+  @@map("notifications")
+}
+
+model ActivityLog {
+  id            String    @id @default(uuid())
+  userId        String
+  action        String
+  details       Json?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime  @default(now())
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@map("activity_logs")
+}
+
+model ChatMessage {
+  id            String    @id @default(uuid())
+  senderId      String
+  receiverId    String
+  message       String
+  isRead        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  
+  sender        User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver      User      @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId, receiverId])
+  @@index([createdAt(sort: Desc)])
+  @@map("chat_messages")
+}

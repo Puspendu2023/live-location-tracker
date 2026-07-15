@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200 dark:border-gray-700;
+  }
+  
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+}
+
+@layer components {
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-gray-500;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border border-gray-200/50 dark:border-gray-700/50;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin;
+  }
+
+  /* Map container */
+  .leaflet-container {
+    @apply rounded-lg z-0;
+  }
+
+  .leaflet-popup-content-wrapper {
+    @apply rounded-lg shadow-xl;
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .leaflet-popup-content-wrapper {
+    background: rgba(31, 41, 55, 0.95);
+    color: #f3f4f6;
+  }
+
+  /* Pulse animation for marker */
+  @keyframes marker-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.1);
+    }
+  }
+
+  .marker-pulse {
+    animation: marker-pulse 2s ease-in-out infinite;
+  }
+
+  /* Grid background */
+  .bg-grid-white\/10 {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+@layer utilities {
+  /* Additional utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+}
