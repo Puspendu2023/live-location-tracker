@@ -1,0 +1,19 @@
+location-tracker-backend@1.0.0 C:\Users\Puspendu\Desktop\live-location-tracker\server
++-- @prisma/client@5.22.0
++-- axios@1.18.1
++-- bcrypt@5.1.1
++-- cors@2.8.6
++-- dotenv@16.6.1
++-- express-rate-limit@7.5.1
++-- express@4.22.2
++-- helmet@7.2.0
++-- joi@17.13.4
++-- jsonwebtoken@9.0.3
++-- morgan@1.11.0
++-- node-cron@3.0.3
++-- nodemon@3.1.14
++-- prisma@5.22.0
++-- qrcode@1.5.4
++-- socket.io@4.8.3
+`-- winston@3.19.0
+
